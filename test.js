@@ -4,32 +4,26 @@ var EC = require('elliptic').ec;
 var ec = new EC('secp256k1');
 var curve = require('elliptic').curve;
 
-const nodeIndex = [
+// y = x^2 -2x + 3
+
+
+let nodeIndex = [
     new BN(1),
-    new BN(2),
+    //new BN(2),
     new BN(3),
     new BN(4),
     //new BN(5),
-    new BN(6),
-    //new BN(),
-    //new BN(8),
-    //new BN(9),
+
 ];
-
-
 
 let shares = [
-    new BN("e0ab90c33b947f88f2602872a09fe610cdddfb08c87c5eeb4d0b88a9c300ac7b", "hex"),
-    new BN("d4c54a64c39a1fe48d8aa3a83a6e150a8ff4a550f8db73bceec1112ca9412b76", "hex"),
-    new BN("cb5474563f5ff068c0e33ad8803215afa8e9c97e0a07aae95b98217149a99011", "hex"),
-    new BN("28d2604581b43241769fe34b1f2543ee234fb3c866abb278786844fe7744f570", "hex"),
-    //new BN("2b0be3f4a680699f75cb1ba70fb88e8f386d5f56de6c356b506040a31953d9ec", "hex"),
-    new BN("e921593a12c95db86243ebf29594773b2031df8a980dfb08d58ef6cfbaa95b50", "hex"),
-    //new BN("4"),
-    //new BN("106926712516392484560520951438545001891023370236487666385857834323402449303984"),
-    //new BN("113614830128753081675660990936548989392410151439319633048711963735716864446722"),
-];
+    new BN("fb85caadc86644ed19b3e4d951f8154ab0833f62b1de587ae984bbe887a3e82246e5115ade386a401f6ca9238b398175b7c2c4ed59a94d2b0b06fad21d7ec311", "hex"),
+    //new BN("5c9e83afde9e9e89a67d50c8fe2d717de33b7b11071bc61289783c13dfa15824f1f0bf7878c7dd53eb516bbb3b00973f1a35fb69700e943c96505055e68b9431", "hex"),
+    new BN("-135b514ed7c045c97a95cdd5d517096f32758a4b345b29e00c6cbd5acdf96f345f6fee3762252e221288831b0131e379875d050e4342ea01898de6e6eb0fcaf15", "hex"),
+    new BN("-46275bf3688d543098621846d46d1587bafb7c82bef21ecf760a1232ace75b6d05f7a4d43b85c6abce82e2dcebc77308c886c3e082a2af086acb612a5d1fd0a48", "hex"),
+    //new BN("-8f1f8907c876337f05fb904cafea50c4aa06261edb70073be7b9473cae4d55e3ef8fc0154b23ddfa00f9bde65f74391c942e9c1fe3f877cd241d101416ed47c3b", "hex"),
 
+];
 
 function lagrangeInterpolation(shares, nodeIndex) {
     if (shares.length !== nodeIndex.length) {
@@ -49,18 +43,15 @@ function lagrangeInterpolation(shares, nodeIndex) {
             }
         }
         let delta = upper.mul(lower.invm(ec.n)).umod(ec.n);
-        delta = delta.mul(shares[i]).umod(ec.n);
+        delta = delta.mul(shares[i]);
         secret = secret.add(delta);
     }
     return secret.umod(ec.n);
 }
 
-
 const derivedPrivateKey = lagrangeInterpolation(shares, nodeIndex);
 console.log(derivedPrivateKey);
 
-
 //privateket 46614476767777658307523919476986223844918179847846400990762178436108490408339
-
 //20dfbe9414c31333b947040669adb038b8d77144e22cd917790a592d08ae0fb4
 
